@@ -1,0 +1,6 @@
+*/target/
+*/build/
+client/node_modules
+tcapp-dev.env
+init.sql
+init-script.sh

@@ -1,0 +1,143 @@
+version: '1.0'
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    command: bash -c "redis-server --appendonly yes --requirepass ${TCAPP_REDIS_PASSWORD}"
+    volumes:
+      - redis_data:/data
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${TCAPP_PGDB_USER}
+      POSTGRES_PASSWORD: ${TCAPP_PGDB_PASSWORD}
+      POSTGRES_DB: turtle_chat
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./data/zookeeper:/data
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./data/kafka:/var/lib/kafka/data
+      - ./init-script.sh:/init-script.sh
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "ChatMessages:1:1"
+      KAFKA_ADVERTISED_PORT: 9092
+
+  tc-api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - JWT_SECRET=${TCAPP_JWT_SECRET}
+      - PGDB_USER=${TCAPP_PGDB_USER}
+      - PGDB_PASSWORD=${TCAPP_PGDB_PASSWORD}
+      - SMTP_EMAIL=${TCAPP_SMTP_EMAIL}
+      - SMTP_PASSWORD=${TCAPP_SMTP_PASSWORD}
+      - REDIS_PASSWORD=${TCAPP_REDIS_PASSWORD}
+    depends_on:
+      - redis
+      - postgres
+
+  tc-batcher:
+    build:
+      context: ./batcher
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - PGDB_USER=${TCAPP_PGDB_USER}
+      - PGDB_PASSWORD=${TCAPP_PGDB_PASSWORD}
+    depends_on:
+      - postgres
+      - kafka
+
+  tc-socket-1:
+    build:
+      context: ./socket
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - JWT_SECRET=${TCAPP_JWT_SECRET}
+      - SERVER_NAME=CHANNEL_1
+      - REDIS_PASSWORD=${TCAPP_REDIS_PASSWORD}
+    depends_on:
+      - redis
+      - kafka
+
+  tc-socket-2:
+    build:
+      context: ./socket
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    environment:
+      - SERVER_NAME=CHANNEL_2
+      - REDIS_PASSWORD=${TCAPP_REDIS_PASSWORD}
+      - JWT_SECRET=${TCAPP_JWT_SECRET}
+    depends_on:
+      - redis
+      - kafka
+
+  tc-socket-3:
+    build:
+      context: ./socket
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8080"
+    environment:
+      - SERVER_NAME=CHANNEL_3
+      - REDIS_PASSWORD=${TCAPP_REDIS_PASSWORD}
+      - JWT_SECRET=${TCAPP_JWT_SECRET}
+    depends_on:
+      - redis
+      - kafka
+
+  tc-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - tc-api
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - tc-api
+      - tc-socket-1
+      - tc-socket-2
+      - tc-socket-3
+
+volumes:
+  redis_data:
+  postgres_data:
