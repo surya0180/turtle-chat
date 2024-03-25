@@ -1,59 +1,25 @@
-name: Deploy with Docker Compose
+name: Deploy
 
 on:
   push:
-    branches:
-      - main  # adjust the branch name as needed
+    branches: [ main ]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest  # or specify a different runner as needed
-
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-      
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-      
-      - name: Copy Project to EC2 Instance
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}  # EC2 instance IP or hostname
-          username: ${{ secrets.EC2_USERNAME }}  # SSH username
-          key: ${{ secrets.EC2_SSH_KEY }}  # SSH private key
-          source: "."  # Path to your project directory
-          target: "/home/ubuntu/project"  # Destination directory on EC2
-      
-      - name: Download env File from S3
-        run: |
-          aws s3 cp ${{ secrets.ENV_FILE_URL }} /home/ubuntu/project/${{ secrets.ENV_FILE_NAME }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          
-      - name: Download sql File from S3
-        run: |
-          aws s3 cp ${{ secrets.SQL_FILE_URL }} /home/ubuntu/project/${{ secrets.SQL_FILE_NAME }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Deploy Project to EC2
+        uses: actions/checkout@v2 
 
-      - name: Download script File from S3
-        run: |
-          aws s3 cp ${{ secrets.SCRIPT_FILE_URL }} /home/ubuntu/project/${{ secrets.SCRIPT_FILE_NAME }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      
-      - name: Run Docker Compose
-        run: |
-          cd /home/ubuntu/project
-          docker-compose up -d --env-file ${{ secrets.ENV_FILE_NAME }}
+      - name: SSH into EC2 Instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.USER_NAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          run: |
+            echo "Hello World from github actions"
+        
