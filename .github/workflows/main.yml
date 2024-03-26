@@ -86,7 +86,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd tcapp
-            docker-compose build
-            docker-compose --env-file ${{secrets.ENV_FILE_NAME}} up -d
+            docker compose build
+            docker compose --env-file ${{secrets.ENV_FILE_NAME}} up -d
           
         
