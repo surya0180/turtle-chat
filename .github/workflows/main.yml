@@ -1,0 +1,92 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2 
+
+      - name: Install Docker & docker-compose in EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.USER_NAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            if ! command -v docker &> /dev/null
+            then
+                echo "Docker is not installed. Installing Docker..."
+                sudo apt-get update
+                sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+                echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+                
+                sudo apt update
+                apt-cache policy docker-ce
+                echo "Y" | sudo apt-get install docker-ce
+                echo "Y" | sudo apt install docker-compose
+                sudo systemctl status docker
+            else
+                echo "Docker is already installed. No need to install again"
+                sudo systemctl status docker
+            fi
+      - name: Copy Project to EC2
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{secrets.SSH_HOST}}
+          REMOTE_USER: ${{secrets.USER_NAME}}
+          TARGET: ./tcapp
+          
+      - name: Download S3 files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.USER_NAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            if ! command -v aws &> /dev/null; then
+              echo "AWS CLI not present! Installing and configuring..."
+              
+              sudo apt update
+              sudo apt install -y awscli
+
+              echo "Setting AWS Access_Key"
+              aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
+
+              echo "Setting AWS Secret_Key"
+              aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+
+              echo "Setting AWS default_region"
+              aws configure set default.region "${{ secrets.DEFAULT_REGION }}"
+            else
+              echo "AWS CLI is already installed. Skipping installation."
+            fi
+
+            echo "Copying s3 files into project"
+            aws s3 cp ${{secrets.TCAPP_SCHEMA_FILE}} ./tcapp
+            aws s3 cp ${{secrets.TCAPP_SCRIPT_FILE}} ./tcapp
+            aws s3 cp ${{secrets.TCAPP_ENV_FILE}} ./tcapp
+
+      - name: Run docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.USER_NAME}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd tcapp
+            docker-compose build
+            docker-compose --env-file ${{secrets.ENV_FILE_NAME}} up -d
+          
+        
