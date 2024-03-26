@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 export const getInvitations = async (by, status) => {
   try {
     const response = await axios.get(
-      `http://localhost:8080/invitation/${by}-invitations/${status}`,
+      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/invitation/${by}-invitations/${status}`,
       {
         headers: {
           Authorization: Cookies.get("AccessToken"),
@@ -26,7 +26,7 @@ export const getInvitations = async (by, status) => {
 export const updateInvitation = async (inviteId, inviteStatus) => {
   try {
     const response = await axios.put(
-      `http://localhost:8080/invitation/update-invite`,
+      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/invitation/update-invite`,
       { inviteId, inviteStatus },
       {
         headers: {
@@ -49,7 +49,7 @@ export const updateInvitation = async (inviteId, inviteStatus) => {
 export const sendInvitation = async (userEmail, roomId) => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/invitation/invite-user",
+      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/invitation/invite-user",
       { recipientEmail: userEmail, roomId },
       {
         headers: {
