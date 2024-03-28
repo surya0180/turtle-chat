@@ -73,7 +73,7 @@ jobs:
               echo "Setting AWS default_region"
               aws configure set default.region "${{ secrets.DEFAULT_REGION }}"
             else
-              echo "AWS CLI is already installed!. Skipping installation."
+              echo "AWS CLI is already installed. Skipping installation."
             fi
 
             echo "Copying s3 files into project"
