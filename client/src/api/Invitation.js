@@ -1,10 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { API_HOST, API_PORT } from "../env";
 
 export const getInvitations = async (by, status) => {
   try {
     const response = await axios.get(
-      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/invitation/${by}-invitations/${status}`,
+      `http://${API_HOST}:${API_PORT}/invitation/${by}-invitations/${status}`,
       {
         headers: {
           Authorization: Cookies.get("AccessToken"),
@@ -26,7 +27,7 @@ export const getInvitations = async (by, status) => {
 export const updateInvitation = async (inviteId, inviteStatus) => {
   try {
     const response = await axios.put(
-      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/invitation/update-invite`,
+      `http://${API_HOST}:${API_PORT}/invitation/update-invite`,
       { inviteId, inviteStatus },
       {
         headers: {
@@ -49,7 +50,7 @@ export const updateInvitation = async (inviteId, inviteStatus) => {
 export const sendInvitation = async (userEmail, roomId) => {
   try {
     const response = await axios.post(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/invitation/invite-user",
+      `http://${API_HOST}:${API_PORT}/invitation/invite-user`,
       { recipientEmail: userEmail, roomId },
       {
         headers: {

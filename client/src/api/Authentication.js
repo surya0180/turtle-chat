@@ -1,11 +1,13 @@
 import axios from "axios";
-import Cookies from "js-cookie";
+import { API_HOST, API_PORT } from "../env";
 
 export const sendOtp = async (email) => {
   try {
     const response = await axios.post(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/authentication/send-otp",
-      { userEmail: email }
+      `http://${API_HOST}:${API_PORT}/authentication/send-otp`,
+      {
+        userEmail: email,
+      }
     );
     return { ...response.data };
   } catch (e) {
@@ -22,7 +24,7 @@ export const sendOtp = async (email) => {
 export const verifyOtp = async (email, otp) => {
   try {
     const response = await axios.post(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/authentication/verify-otp",
+      `http://${API_HOST}:${API_PORT}/authentication/verify-otp`,
       { userEmail: email, OTP: otp }
     );
     return { ...response.data };
@@ -40,7 +42,7 @@ export const verifyOtp = async (email, otp) => {
 export const saveUsername = async (userId, userName, userEmail) => {
   try {
     const response = await axios.put(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/authentication/save-username",
+      `http://${API_HOST}:${API_PORT}/authentication/save-username`,
       { userId, userName, userEmail }
     );
     return { ...response.data };

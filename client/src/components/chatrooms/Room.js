@@ -9,6 +9,7 @@ import { getChatMessages } from "../../api/Chatroom";
 import ChatInput from "../../UI/ChatInput";
 import Cookies from "js-cookie";
 import ChatMessage from "./ChatMessage";
+import { API_HOST, SOCKET_PORT } from "../../env";
 
 function Room({ room, onRoomExit }) {
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ function Room({ room, onRoomExit }) {
     const token = Cookies.get("AccessToken");
     if (token && room?.roomId) {
       const webSocket = new WebSocket(
-        `ws://localhost:80/chatroom?roomId=${room.roomId}&token=${token}`
+        `ws://${API_HOST}:${SOCKET_PORT}/chatroom?roomId=${room.roomId}&token=${token}`
       );
       webSocket.onopen = (...props) => {
         console.log(props, "ONOPEN PROPS");

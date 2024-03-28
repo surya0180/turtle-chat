@@ -1,10 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { API_HOST, API_PORT } from "../env";
 
 export const createChatroom = async (roomName) => {
   try {
     const response = await axios.post(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/create-chatroom",
+      `http://${API_HOST}:${API_PORT}/chatroom/create-chatroom`,
       { roomName },
       {
         headers: {
@@ -27,7 +28,7 @@ export const createChatroom = async (roomName) => {
 export const updateChatroom = async (roomId, roomName) => {
   try {
     const response = await axios.put(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/update-chatroom",
+      `http://${API_HOST}:${API_PORT}/chatroom/update-chatroom`,
       { roomId, roomName },
       {
         headers: {
@@ -50,7 +51,7 @@ export const updateChatroom = async (roomId, roomName) => {
 export const deleteChatroom = async (roomId) => {
   try {
     const response = await axios.delete(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/deactivate-chatroom",
+      `http://${API_HOST}:${API_PORT}/chatroom/deactivate-chatroom`,
       {
         data: { roomId },
         headers: {
@@ -73,7 +74,7 @@ export const deleteChatroom = async (roomId) => {
 export const exitChatroom = async (roomId) => {
   try {
     const response = await axios.delete(
-      "http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/exit-chatroom",
+      `http://${API_HOST}:${API_PORT}/chatroom/exit-chatroom`,
       {
         data: { roomId },
         headers: {
@@ -97,7 +98,7 @@ export const exitChatroom = async (roomId) => {
 export const getChatrooms = async (type) => {
   try {
     const response = await axios.get(
-      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/${
+      `http://${API_HOST}:${API_PORT}/chatroom/${
         type === "H" ? "hosting" : "participating"
       }-chatrooms`,
       {
@@ -121,7 +122,7 @@ export const getChatrooms = async (type) => {
 export const getParticipants = async (roomId) => {
   try {
     const response = await axios.get(
-      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/participants/${roomId}`,
+      `http://${API_HOST}:${API_PORT}/chatroom/participants/${roomId}`,
       {
         headers: {
           Authorization: Cookies.get("AccessToken"),
@@ -143,7 +144,7 @@ export const getParticipants = async (roomId) => {
 export const getChatMessages = async (roomId, pageNumber, pageLimit) => {
   try {
     const response = await axios.get(
-      `http://ec2-13-233-85-190.ap-south-1.compute.amazonaws.com:8080/chatroom/messages/${roomId}?pageNumber=${pageNumber}&pageLimit=${pageLimit}`,
+      `http://${API_HOST}:${API_PORT}/chatroom/messages/${roomId}?pageNumber=${pageNumber}&pageLimit=${pageLimit}`,
       {
         headers: {
           Authorization: Cookies.get("AccessToken"),
