@@ -4,19 +4,19 @@ Welcome to **Turtle Chat**, a modern and secure chat application that simplifies
 
 ## 📝 Table of Contents
 
-- [Features](#features)
-- [Architecture Overview](#architecture-overview)
-- [Frontend](#frontend)
-- [Backend](#backend)
+- [Features](#-features)
+- [Architecture Overview](#-architecture-overview)
+- [Frontend](#-frontend)
+- [Backend](#-backend)
   - [Main Server](#main-server)
   - [Socket Application](#socket-application)
   - [Batcher Service](#batcher-service)
-- [Technology Stack](#technology-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots & GIFs](#screenshots--gifs)
-- [Contributing](#contributing)
-- [License](#license)
+- [Technology Stack](#-technology-stack)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Screenshots & GIFs](#-screenshots--gifs)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ## 🌟 Features
 
