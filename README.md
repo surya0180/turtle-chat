@@ -46,8 +46,6 @@ Turtle Chat is designed with scalability and efficiency in mind, utilizing a mic
    - Consumes messages from the Kafka pipeline in batches.
    - Efficiently stores messages in the database, ensuring persistence and scalability.
 
-![Architecture Diagram Placeholder](#) *(Add an architecture diagram here if available)*
-
 ## 🎨 Frontend
 
 The frontend of Turtle Chat is developed using **React JS**, providing a responsive and user-friendly interface for all devices. Users can log in, create or join chatrooms, and interact with others in real-time.
