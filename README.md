@@ -75,7 +75,7 @@ The Batcher service is responsible for:
 - **Kafka Consumer:** Consumes messages from the Kafka pipeline.
 - **Batch Processing:** Efficiently stores chat messages into the database, optimizing for high throughput and low latency.
 
-## 🛠️ Technology Stack
+## 🛠 Technology Stack
 
 - **Frontend:** React JS
 - **Backend:** Java Spring Boot
@@ -84,7 +84,7 @@ The Batcher service is responsible for:
 - **Messaging Queue:** Kafka
 - **Containerization:** Docker & Docker Compose
 
-## ⚙️ Installation
+## ⚙ Installation
 
 To run Turtle Chat locally, follow these steps:
 
