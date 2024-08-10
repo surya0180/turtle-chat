@@ -27,7 +27,7 @@ Welcome to **Turtle Chat**, a modern and secure chat application that simplifies
 - **Chatroom Management:** Delete chatrooms when they are no longer needed.
 - **Scalable Architecture:** Built to handle concurrent users and messages efficiently.
 
-## 🏛️ Architecture Overview
+## 🤖 Architecture Overview
 
 Turtle Chat is designed with scalability and efficiency in mind, utilizing a microservices architecture. Here's a high-level overview of the system:
 
