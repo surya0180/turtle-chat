@@ -1,5 +1,7 @@
 # 🐢 Turtle Chat
 
+**Turtle Chat: Built with the philosophy that meaningful conversations take their time. Slow and steady, just like the turtle, it’s designed to be reliable and thoughtful, ensuring every message counts.**
+
 Welcome to **Turtle Chat**, a modern and secure chat application that simplifies the way users connect and communicate. With OTP-based login, chatroom creation, real-time messaging, and scalable architecture, Turtle Chat provides a seamless and efficient chatting experience.
 
 ## 📝 Table of Contents
@@ -77,38 +79,13 @@ The Batcher service is responsible for:
 
 ## 🛠 Technology Stack
 
-- **Frontend:** React JS
+- **Frontend:** React JS, Material UI
 - **Backend:** Java Spring Boot
 - **WebSocket:** Java with Spring Boot, Docker, Redis PubSub
-- **Database:** Relational Database (e.g., PostgreSQL, MySQL)
+- **Database:** Relational Database ( PostgreSQL )
 - **Messaging Queue:** Kafka
 - **Containerization:** Docker & Docker Compose
 
-## ⚙ Installation
-
-To run Turtle Chat locally, follow these steps:
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/turtle-chat.git
-   cd turtle-chat
-2. **Configure Environment Variables:**
-   Create an `.env` file in the root of your backend project directory with the following environment variables:
-   ```env
-   SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/turtlechat
-   SPRING_DATASOURCE_USERNAME=your_db_username
-   SPRING_DATASOURCE_PASSWORD=your_db_password
-   KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-   REDIS_HOST=localhost
-   REDIS_PORT=6379
-3. **Build and Run the Docker Containers:**
-   Navigate to the root of your project and run:
-   ```bash
-   docker-compose up --build
-4. **Run the Spring Boot Application:**
-   If not running via Docker, you can start the Spring Boot application directly:
-   ```bash
-   ./mvnw spring-boot:run
 ## 🚀 Usage
 
 After setting up the application, you can:
@@ -121,7 +98,7 @@ After setting up the application, you can:
 
 ## 📸 Screenshots & GIFs
 
-*(Place screenshots and GIFs showcasing the application here)*
+
 
 ## 🤝 Contributing
 
