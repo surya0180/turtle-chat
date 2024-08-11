@@ -88,7 +88,7 @@ The Batcher service is responsible for:
 - **Messaging Queue:** Kafka
 - **Containerization:** Docker & Docker Compose
 
-## ⚙️ Installation
+## ⚙ Installation
 
 To run Turtle Chat locally, follow these steps:
 
