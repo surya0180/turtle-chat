@@ -2,6 +2,6 @@
 */build/
 client/node_modules
 tcapp-dev.env
-init.sql
+# init.sql
 init-script.sh
 *.pem
