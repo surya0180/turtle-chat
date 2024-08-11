@@ -34,10 +34,12 @@ Welcome to **Turtle Chat**, a modern and secure chat application that simplifies
 Turtle Chat is designed with scalability and efficiency in mind, utilizing a microservices architecture. Here's a high-level overview of the system:
 
 1. **Main Server (REST API):**
+
    - Handles authentication, chatroom CRUD operations, and invitations.
    - Built with Java Spring Boot.
 
 2. **Socket Application (WebSockets):**
+
    - Manages real-time message exchange between clients in chatrooms.
    - Consists of three nodes running in Docker containers, each connected to a Redis PubSub for message broadcasting.
    - Publishes messages to a Kafka pipeline for further processing.
@@ -45,6 +47,8 @@ Turtle Chat is designed with scalability and efficiency in mind, utilizing a mic
 3. **Batcher Service:**
    - Consumes messages from the Kafka pipeline in batches.
    - Efficiently stores messages in the database, ensuring persistence and scalability.
+
+![design-image](./images/Design.jpeg)
 
 ## 🎨 Frontend
 
@@ -84,6 +88,63 @@ The Batcher service is responsible for:
 - **Messaging Queue:** Kafka
 - **Containerization:** Docker & Docker Compose
 
+## ⚙️ Installation
+
+To run Turtle Chat locally, follow these steps:
+
+1. **Clone the repository:**
+   ````
+   git clone https://github.com/your-username/turtle-chat.git
+   cd turtle-chat```
+   ````
+2. **Create Scripts & Env file**
+   These three files needs to be in the root of the project.
+
+   - tcapp.env
+
+   ```
+      TCAPP_PGDB_USER=
+      TCAPP_PGDB_PASSWORD=
+
+      TCAPP_JWT_SECRET=/* Any 256 bit Secret key */
+
+      TCAPP_SMTP_EMAIL=/* Your gmail in which app password is created */
+      TCAPP_SMTP_PASSWORD=/* App password */
+
+      TCAPP_REDIS_PASSWORD=
+
+      API_HOST=localhost
+      API_PORT=8080
+
+      SOCKET_PORT=80
+   ```
+
+   - init-script.sh
+
+   ```
+      #!/bin/bash
+
+      # Wait for Kafka to be ready
+      while ! echo exit | nc kafka 9092; do sleep 10; done
+
+      # Create the topic
+      kafka-topics.sh --create --topic ChatMessages --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+
+      echo "Kafka topic 'ChatMessages' created successfully"
+   ```
+
+   - init.sql
+
+   ```
+      Can be found in the repository.
+   ```
+
+   After these files are in place, Run this docker command to setup the project.
+
+   ```
+      docker-compose --env-file <your env file name> up --build -d
+   ```
+
 ## 🚀 Usage
 
 After setting up the application, you can:
@@ -96,7 +157,10 @@ After setting up the application, you can:
 
 ## 📸 Screenshots & GIFs
 
-
+![design-gif](./images/webpage1.png)
+![design-gif](./images/webpage2.png)
+![design-gif](./images/webpage3.png)
+![design-gif](./images/Demo.gif)
 
 ## 🤝 Contributing
 
