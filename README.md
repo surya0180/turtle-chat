@@ -2,7 +2,7 @@
 
 **Turtle Chat: Built with the philosophy that meaningful conversations take their time. Slow and steady, just like the turtle, it’s designed to be reliable and thoughtful, ensuring every message counts.**
 
-Welcome to **Turtle Chat**, a modern and secure chat application that simplifies the way users connect and communicate. With OTP-based login, chatroom creation, real-time messaging, and scalable architecture, Turtle Chat provides a seamless and efficient chatting experience.
+Welcome to **Turtle Chat**, a modern and secure chatting application that simplifies the way users connect and communicate. With OTP-based login, chatroom creation, real-time messaging, and scalable architecture, Turtle Chat provides a seamless and efficient chatting experience.
 
 ## 📝 Table of Contents
 
